@@ -28,6 +28,27 @@ const Quiz = {
           correct: false
         }
       ]
+    },
+    {
+      question: "The condition in an if/else statement is enclosed with ________.",
+      choices: [
+        {
+          text: "quotes",
+          correct: false
+        },
+        {
+          text: "curly brackets",
+          correct: true
+        },
+        {
+          text: "parenthesis",
+          correct: false
+        },
+        {
+          text: "square brackets",
+          correct: false
+        }
+      ]
     }
   ]
 };
@@ -58,32 +79,62 @@ let startQuiz = function() {
   mainContent.classList.add("left");
   mainContent.classList.remove("center");
 
+  let choicePool = document.getElementById("choices");
+  let questionIdx = 0;
+
+  getQuestion(questionIdx);
+};
+
+let getQuestion = function(questionIdx) {
+  console.log(`Question Index: ${questionIdx}\nQuiz Question:${Quiz.questions[questionIdx]}`);
+  console.dir(Quiz.questions[questionIdx].question);
   let title = document.getElementById("title");
-  title.textContent = Quiz.questions[0].question;
+  title.textContent = Quiz.questions[questionIdx].question;
 
   let description = document.getElementById("description");
   description.textContent = "";
 
   let choicePool = document.getElementById("choices");
+  choicePool.innerHTML = "";
 
+  title.setAttribute("data-question-id", questionIdx);
   // create choices for given question
-  for (let idx in Quiz.questions[0].choices) {
+  for (let idx in Quiz.questions[questionIdx].choices) {
     let choiceBtn = document.createElement("button");
     choiceBtn.classList.add("left");
-    choiceBtn.appendChild(document.createTextNode(Quiz.questions[0].choices[idx].text));
+    choiceBtn.appendChild(document.createTextNode(Quiz.questions[questionIdx].choices[idx].text));
     choiceBtn.setAttribute("data-choice-id", idx);
     choicePool.appendChild(choiceBtn);
   }
 
+
   // determine if choice is correct or not
-  console.log(this)
-  console.log(checkAnswer);
-  choicePool.addEventListener("click", checkAnswer);
-};
+  choicePool.addEventListener("click", function() {
+    questionIdx++;
+    if (questionIdx < Quiz.questions.length) {
+      getQuestion(questionIdx);
+    } else {
+      console.log("Quiz has ended. All questions asked.");
+      title.textContent = "Quiz complete";
+      choicePool.innerHTML = "";
+
+      // Move on to score display and submission
+    }
+  });
+}
 
 let checkAnswer = function(event) {
   let choiceIdx = event.target.getAttribute("data-choice-id");
-  console.log(Quiz.questions[0].choices[choiceIdx].correct);
+
+  let isChoiceCorrectEl = document.getElementById("isChoiceCorrect");
+
+  if (Quiz.questions[0].choices[choiceIdx].correct) {
+    isChoiceCorrectEl.innerHTML = "<p>Correct!</p>";
+    return Quiz.questions[0].choices[choiceIdx].correct;
+  } else {
+    isChoiceCorrectEl.innerHTML = "<p>Wrong!</p>";
+    return Quiz.questions[0].choices[choiceIdx].correct;
+  }
 }
 
 loadQuiz();

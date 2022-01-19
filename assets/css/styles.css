@@ -60,6 +60,7 @@ span {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  gap: 200px;
 }
 
 .content {
@@ -86,4 +87,11 @@ span {
 .left {
   text-align: left;
   align-items: left;
+}
+
+#isChoiceCorrect {
+  height: 40px;
+  color: #7F7D9C;
+  border-top: 2px solid #7F7D9C;
+  margin: 20px 0;
 }
