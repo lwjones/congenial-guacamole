@@ -54,21 +54,6 @@ span {
   justify-content: space-between;
 }
 
-#details ul {
-  list-style: none;
-}
-
-.center {
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-}
-
-.left {
-  text-align: left;
-  align-items: left;
-}
-
 #main {
   display: flex;
   flex-flow: column wrap;
@@ -80,4 +65,25 @@ span {
 .content {
   max-width: 600px;
   width: 100%;
+}
+
+#details ul {
+  list-style: none;
+}
+
+#choices {
+  display: flex;
+  flex-flow: column wrap;
+  gap: 12px;
+}
+
+.center {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.left {
+  text-align: left;
+  align-items: left;
 }

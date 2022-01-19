@@ -40,32 +40,36 @@ class Quiz {
     let description = document.getElementById("description");
     description.textContent = quiz.frontMatter.description;
 
-    let answerPool = document.getElementById("choices");
+    let cta = document.getElementById("cta");
     let startBtn = document.createElement("button");
     startBtn.appendChild(document.createTextNode(quiz.frontMatter.cta));
-    answerPool.appendChild(startBtn);
+    cta.appendChild(startBtn);
 
     let mainContent = document.getElementById("main");
     mainContent.classList.add("center");
 
-    startBtn.addEventListener("click", startQuiz);
+    startBtn.addEventListener("click", this.startQuiz);
   }
-}
 
-startQuiz = function() {
-  document.getElementById("choices").innerHTML = "";
+  startQuiz = function() {
+    document.getElementById("cta").innerHTML = "";
+    let mainContent = document.getElementById("main");
+    mainContent.classList.add("left");
+    mainContent.classList.remove("center");
 
-  let title = document.getElementById("title");
-  title.textContent = quiz.questions[0].question;
+    let title = document.getElementById("title");
+    title.textContent = quiz.questions[0].question;
 
-  let description = document.getElementById("description");
-  description.textContent = "";
+    let description = document.getElementById("description");
+    description.textContent = "";
 
-  for (let idx in quiz.questions[0].choices) {
-    let answerPool = document.getElementById("choices");
-    let choiceBtn = document.createElement("button");
-    choiceBtn.appendChild(document.createTextNode(quiz.questions[0].choices[idx].text));
-    answerPool.appendChild(choiceBtn);
+    for (let idx in quiz.questions[0].choices) {
+      let choicePool = document.getElementById("choices");
+      let choiceBtn = document.createElement("button");
+      choiceBtn.classList.add("left");
+      choiceBtn.appendChild(document.createTextNode(quiz.questions[0].choices[idx].text));
+      choicePool.appendChild(choiceBtn);
+    }
   }
 }
 
