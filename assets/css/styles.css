@@ -95,3 +95,7 @@ span {
   border-top: 2px solid #7F7D9C;
   margin: 20px 0;
 }
+
+.hidden {
+  display: none;
+}

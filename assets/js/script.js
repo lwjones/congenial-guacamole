@@ -79,7 +79,6 @@ let startQuiz = function() {
   mainContent.classList.add("left");
   mainContent.classList.remove("center");
 
-  let choicePool = document.getElementById("choices");
   let questionIdx = 0;
 
   getQuestion(questionIdx);
@@ -107,9 +106,9 @@ let getQuestion = function(questionIdx) {
     choicePool.appendChild(choiceBtn);
   }
 
-
   // determine if choice is correct or not
-  choicePool.addEventListener("click", function() {
+  choicePool.addEventListener("click", function(event) {
+    checkAnswer(event);
     questionIdx++;
     if (questionIdx < Quiz.questions.length) {
       getQuestion(questionIdx);
