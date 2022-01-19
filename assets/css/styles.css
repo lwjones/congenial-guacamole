@@ -19,6 +19,7 @@ button, #timer {
 }
 
 button:hover {
+  cursor: pointer;
   background-color: #bd61e8;
 }
 
