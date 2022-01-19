@@ -1,0 +1,82 @@
+* {
+  font-family: "Noto Sans", "Lucida Sans", "Lucida Sans Regular",
+    "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  text-align: center;
+  color: white;
+  background-color: #341b72;
+  border: none;
+  border-radius: 10px;
+  width: 300px;
+}
+
+button, #timer {
+  padding: 15px 20px;
+}
+
+button:hover {
+  background-color: #bd61e8;
+}
+
+button:active {
+  opacity: 0.5;
+}
+
+#view-scores-btn {
+  background-color: white;
+  color: #bd61e8;
+}
+
+h1 {
+  font-size: 48px;
+}
+
+p,
+button,
+span {
+  font-size: 32px;
+}
+
+#cover {
+  text-align: center;
+}
+
+#header {
+  width: auto;
+  display: flex;
+  flex-wrap: wrap;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+
+#details ul {
+  list-style: none;
+}
+
+.center {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.left {
+  text-align: left;
+  align-items: left;
+}
+
+#main {
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.content {
+  max-width: 600px;
+  width: 100%;
+}
