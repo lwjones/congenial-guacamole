@@ -74,6 +74,16 @@ let startQuiz = function() {
     choiceBtn.setAttribute("data-choice-id", idx);
     choicePool.appendChild(choiceBtn);
   }
+
+  // determine if choice is correct or not
+  console.log(this)
+  console.log(checkAnswer);
+  choicePool.addEventListener("click", checkAnswer);
+};
+
+let checkAnswer = function(event) {
+  let choiceIdx = event.target.getAttribute("data-choice-id");
+  console.log(Quiz.questions[0].choices[choiceIdx].correct);
 }
 
 loadQuiz();
