@@ -53,6 +53,7 @@ const Quiz = {
   ]
 };
 
+
 let loadQuiz = function() {
   let title = document.getElementById("title");
   title.textContent = Quiz.frontMatter.title;
@@ -72,6 +73,17 @@ let loadQuiz = function() {
 };
 
 let startQuiz = function() {
+  timeLeft = 5; // FIXME: Set default to 40
+  timerEl.textContent = timeLeft;
+  quizTimer = setInterval(function() {
+    timeLeft--;
+    timerEl.textContent = timeLeft;
+    if (timeLeft <= 0) {
+      clearInterval(quizTimer);
+      endQuiz();
+    }
+  }, 1000);
+
   // Clear start quiz button
   document.getElementById("cta").innerHTML = "";
 
@@ -85,8 +97,6 @@ let startQuiz = function() {
 };
 
 let getQuestion = function(questionIdx) {
-  console.log(`Question Index: ${questionIdx}\nQuiz Question:${Quiz.questions[questionIdx]}`);
-  console.dir(Quiz.questions[questionIdx].question);
   let title = document.getElementById("title");
   title.textContent = Quiz.questions[questionIdx].question;
 
@@ -113,10 +123,8 @@ let getQuestion = function(questionIdx) {
     if (questionIdx < Quiz.questions.length) {
       getQuestion(questionIdx);
     } else {
-      console.log("Quiz has ended. All questions asked.");
-      title.textContent = "Quiz complete";
-      choicePool.innerHTML = "";
-
+      clearInterval(quizTimer);
+      endQuiz();
       // Move on to score display and submission
     }
   });
@@ -124,16 +132,40 @@ let getQuestion = function(questionIdx) {
 
 let checkAnswer = function(event) {
   let choiceIdx = event.target.getAttribute("data-choice-id");
-
+  let questionIdx = document.getElementById("title").getAttribute("data-question-id");
+  let isCorrect = Quiz.questions[questionIdx].choices[choiceIdx].correct;
   let isChoiceCorrectEl = document.getElementById("isChoiceCorrect");
+  isChoiceCorrectEl.classList.remove("hidden");
 
-  if (Quiz.questions[0].choices[choiceIdx].correct) {
+  if (isCorrect) {
     isChoiceCorrectEl.innerHTML = "<p>Correct!</p>";
-    return Quiz.questions[0].choices[choiceIdx].correct;
   } else {
     isChoiceCorrectEl.innerHTML = "<p>Wrong!</p>";
-    return Quiz.questions[0].choices[choiceIdx].correct;
+    // penalty if wrong: remove 10 points/seconds
+    timeLeft -= 10;
   }
 }
+
+let endQuiz = function() {
+  // if time negative set to zero
+  timerEl.textContent = '0';
+
+  // replace title
+  let title = document.getElementById("title");
+  title.textContent = "All Done!";
+
+  let description = document.getElementById("description");
+  description.textContent = `Your final score is ${timeLeft}`;
+
+  let choicePool = document.getElementById("choices");
+  choicePool.textContent = "";
+
+  // new title
+
+  // print score
+}
+
+let quizTimer, timeLeft;
+let timerEl = document.getElementById("remaining");
 
 loadQuiz();
