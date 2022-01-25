@@ -56,19 +56,39 @@ const Quiz = {
 let quizTimer, timeLeft;
 let timerEl = document.getElementById("remaining");
 let localStorage = window.localStorage;
-let quizStorage = [];
+let quizStorage;
+
+
+let clearContents = function() {
+  let title = document.getElementById("title");
+  title.textContent = "";
+
+  let description = document.getElementById("description");
+  description.textContent = "";
+
+  let choicePool = document.getElementById("choices");
+  choicePool.textContent = "";
+
+  let submitScoreForm = document.getElementById("entry");
+  submitScoreForm = "";
+
+  document.getElementById("cta").innerHTML = "";
+}
 
 
 let loadStorage = function(flush = false) {
   let currentData = localStorage.getItem('quiz-scores');
   if (!currentData || !currentData.length || flush === true) {
+    quizStorage = [];
     localStorage.setItem('quiz-scores', JSON.stringify([]));
   } else {
     quizStorage = JSON.parse(localStorage.getItem('quiz-scores'));
+    quizStorage.sort((a, b) => a.score - b.score).reverse();
   }
 };
 
 let updateStorage = function() {
+  quizStorage.sort((a, b) => a.score - b.score).reverse();
   localStorage.setItem('quiz-scores', JSON.stringify(quizStorage));
 }
 
@@ -77,11 +97,19 @@ let clearStorage = function() {
 }
 
 let loadQuiz = function() {
+  clearContents();
+
+  let header = document.getElementById("header");
+  header.classList.remove("hidden");
+
   let title = document.getElementById("title");
   title.textContent = Quiz.frontMatter.title;
 
   let description = document.getElementById("description");
   description.textContent = Quiz.frontMatter.description;
+
+  let showHighScoresBtn = document.getElementById("view-scores-btn");
+  showHighScoresBtn.addEventListener("click", showHighScores);
 
   let cta = document.getElementById("cta");
   let startBtn = document.createElement("button");
@@ -121,16 +149,14 @@ let startQuiz = function() {
 
 
 let getQuestion = function(questionIdx) {
+  clearContents();
+
   let title = document.getElementById("title");
   title.textContent = Quiz.questions[questionIdx].question;
-
-  let description = document.getElementById("description");
-  description.textContent = "";
+  title.setAttribute("data-question-id", questionIdx);
 
   let choicePool = document.getElementById("choices");
-  choicePool.innerHTML = "";
 
-  title.setAttribute("data-question-id", questionIdx);
   // create choices for given question
   for (let idx in Quiz.questions[questionIdx].choices) {
     let choiceBtn = document.createElement("button");
@@ -174,6 +200,8 @@ let checkAnswer = function(event) {
 
 
 let endQuiz = function() {
+  clearContents();
+
   // if time negative set to zero
   timerEl.textContent = '0';
 
@@ -184,9 +212,6 @@ let endQuiz = function() {
   let description = document.getElementById("description");
   description.textContent = `Your final score is ${timeLeft}`;
 
-  let choicePool = document.getElementById("choices");
-  choicePool.textContent = "";
-
   submitScore();
 }
 
@@ -195,11 +220,11 @@ let submitScore = function() {
 
   let submitScoreForm = document.getElementById("entry");
   submitScoreForm.innerHTML = `
-  <form>
-  <label for="initials">Enter Initials:</label>
-  <input type="text" id="user_name" name="initials" value="Your Initials">
-  <input type="submit" id="submit_score" value="Submit">
-  </form>
+    <form>
+    <label for="name">Enter Name:</label>
+    <input type="text" id="user_name" name="name" placeholder="Your Name" required>
+    <input type="submit" id="submit_score" value="Submit">
+    </form>
   `;
 
   let submitBtn = document.getElementById("submit_score");
@@ -208,11 +233,32 @@ let submitScore = function() {
     event.preventDefault();
 
     let name = document.getElementById("user_name").value;
-    console.log(`Name: ${name}, Score ${timeLeft}`);
     quizStorage.push({ name: name, score: timeLeft });
     updateStorage();
+    showHighScores();
   };
 }
+
+let showHighScores = function() {
+  clearContents();
+  let title = document.getElementById("title");
+  title.textContent = "High Scores";
+
+  let submitScoreForm = document.getElementById("entry");
+  submitScoreForm.remove();
+
+  let header = document.getElementById("header");
+  header.style.display = "none";
+
+  let scores = document.getElementById("scores-list");
+  for (let i = 0; i < quizStorage.length; i++) {
+    let scoreEl = document.createElement("li");
+    scoreEl.classList.add('scoreboard');
+    scoreEl.textContent = `${i + 1}. ${quizStorage[i].name} - ${quizStorage[i].score}`;
+    scores.appendChild(scoreEl);
+  }
+}
+
 
 loadStorage();
 loadQuiz();
