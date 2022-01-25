@@ -53,6 +53,28 @@ const Quiz = {
   ]
 };
 
+let quizTimer, timeLeft;
+let timerEl = document.getElementById("remaining");
+let localStorage = window.localStorage;
+let quizStorage = [];
+
+
+let loadStorage = function(flush = false) {
+  let currentData = localStorage.getItem('quiz-scores');
+  if (!currentData || !currentData.length || flush === true) {
+    localStorage.setItem('quiz-scores', JSON.stringify([]));
+  } else {
+    quizStorage = JSON.parse(localStorage.getItem('quiz-scores'));
+  }
+};
+
+let updateStorage = function() {
+  localStorage.setItem('quiz-scores', JSON.stringify(quizStorage));
+}
+
+let clearStorage = function() {
+  loadStorage(flush=true);
+}
 
 let loadQuiz = function() {
   let title = document.getElementById("title");
@@ -71,6 +93,7 @@ let loadQuiz = function() {
 
   startBtn.addEventListener("click", startQuiz);
 };
+
 
 let startQuiz = function() {
   timeLeft = 5; // FIXME: Set default to 40
@@ -96,6 +119,7 @@ let startQuiz = function() {
   getQuestion(questionIdx);
 };
 
+
 let getQuestion = function(questionIdx) {
   let title = document.getElementById("title");
   title.textContent = Quiz.questions[questionIdx].question;
@@ -116,7 +140,8 @@ let getQuestion = function(questionIdx) {
     choicePool.appendChild(choiceBtn);
   }
 
-  // determine if choice is correct or not
+  // determine if choice is correct or not, then either populate next question
+  // or end quiz
   choicePool.addEventListener("click", function(event) {
     checkAnswer(event);
     questionIdx++;
@@ -129,6 +154,7 @@ let getQuestion = function(questionIdx) {
     }
   });
 }
+
 
 let checkAnswer = function(event) {
   let choiceIdx = event.target.getAttribute("data-choice-id");
@@ -146,6 +172,7 @@ let checkAnswer = function(event) {
   }
 }
 
+
 let endQuiz = function() {
   // if time negative set to zero
   timerEl.textContent = '0';
@@ -160,12 +187,32 @@ let endQuiz = function() {
   let choicePool = document.getElementById("choices");
   choicePool.textContent = "";
 
-  // new title
-
-  // print score
+  submitScore();
 }
 
-let quizTimer, timeLeft;
-let timerEl = document.getElementById("remaining");
 
+let submitScore = function() {
+
+  let submitScoreForm = document.getElementById("entry");
+  submitScoreForm.innerHTML = `
+  <form>
+  <label for="initials">Enter Initials:</label>
+  <input type="text" id="user_name" name="initials" value="Your Initials">
+  <input type="submit" id="submit_score" value="Submit">
+  </form>
+  `;
+
+  let submitBtn = document.getElementById("submit_score");
+
+  submitBtn.onclick = function(event) {
+    event.preventDefault();
+
+    let name = document.getElementById("user_name").value;
+    console.log(`Name: ${name}, Score ${timeLeft}`);
+    quizStorage.push({ name: name, score: timeLeft });
+    updateStorage();
+  };
+}
+
+loadStorage();
 loadQuiz();
