@@ -125,27 +125,25 @@ let timerEl = document.getElementById("remaining");
 let localStorage = window.localStorage;
 let quizStorage;
 
-
+/**
+ * Clears placeholder contents.
+ */
 let clearContents = function() {
-  let title = document.getElementById("title");
-  title.textContent = "";
-
-  let description = document.getElementById("description");
-  description.textContent = "";
-
-  let choicePool = document.getElementById("choices");
-  choicePool.textContent = "";
-
-  let submitScoreForm = document.getElementById("entry");
-  submitScoreForm = "";
-
-  let scoreEl = document.getElementById("scores-list");
-  scoreEl.innerHTML = "";
-
+  document.getElementById("title").textContent = "";
+  document.getElementById("description").textContent = "";
+  document.getElementById("choices").textContent = "";
+  document.getElementById("entry").innerHTML = "";
+  document.getElementById("scores-list").innerHTML = "";
+  document.getElementById("scores-action").innerHTML = "";
   document.getElementById("cta").innerHTML = "";
 }
 
 
+/**
+ * Loads scoreboard from local storage. Populates if data does not exist, and
+ * can be cleared when `flush` is true.
+ * @param {bool} flush Optional. Clears contents of storage. Default: false.
+ */
 let loadStorage = function(flush=false) {
   let currentData = localStorage.getItem('quiz-scores');
   if (!currentData || !currentData.length || flush === true) {
@@ -157,15 +155,27 @@ let loadStorage = function(flush=false) {
   }
 };
 
+
+/**
+ * Sorts the scores in order of highest to lowest.
+ */
 let updateStorage = function() {
   quizStorage.sort((a, b) => a.score - b.score).reverse();
   localStorage.setItem('quiz-scores', JSON.stringify(quizStorage));
 }
 
+
+/**
+ * Clears contents of the scoreboard.
+ */
 let clearStorage = function() {
   loadStorage(flush=true);
 }
 
+
+/**
+ * Populates the quiz main page.
+ */
 let loadQuiz = function() {
   clearContents();
 
@@ -196,6 +206,9 @@ let loadQuiz = function() {
 };
 
 
+/**
+ * Starts the quiz, loading the first question.
+ */
 let startQuiz = function() {
   timeLeft = 40;
   timerEl.textContent = timeLeft;
@@ -221,6 +234,10 @@ let startQuiz = function() {
 };
 
 
+/**
+ * Loads a question to the screen.
+ * @param {int} questionIdx Current question to display.
+ */
 let getQuestion = function(questionIdx) {
   clearContents();
 
@@ -241,7 +258,7 @@ let getQuestion = function(questionIdx) {
 
   // determine if choice is correct or not, then either populate next question
   // or end quiz
-  choicePool.addEventListener("click", function(event) {
+  choicePool.addEventListener("click", function questionHandler(event) {
     checkAnswer(event);
     questionIdx++;
     if (questionIdx < Quiz.questions.length) {
@@ -251,10 +268,17 @@ let getQuestion = function(questionIdx) {
       endQuiz();
       // Move on to score display and submission
     }
+    this.removeEventListener("click", questionHandler);
   });
 }
 
 
+
+
+/**
+ * Writes to screen to show if the user's response is correct.
+ * @param {*} event
+ */
 let checkAnswer = function(event) {
   let choiceIdx = event.target.getAttribute("data-choice-id");
   let questionIdx = document.getElementById("title").getAttribute("data-question-id");
@@ -280,6 +304,9 @@ let checkAnswer = function(event) {
 }
 
 
+/**
+ * Show user their score.
+ */
 let endQuiz = function() {
   // If there is questions remaining, assume they are wrong
   let questionIdx = document.getElementById("title").getAttribute("data-question-id");
@@ -303,6 +330,9 @@ let endQuiz = function() {
 }
 
 
+/**
+ * Enters score to add to the scoreboard.
+ */
 let submitScore = function() {
 
   let submitScoreForm = document.getElementById("entry");
@@ -328,6 +358,10 @@ let submitScore = function() {
   };
 }
 
+
+/**
+ * Shows the list of high scores listed highest to lowest.
+ */
 let showHighScores = function() {
   clearContents();
   let title = document.getElementById("title");
@@ -357,6 +391,7 @@ let showHighScores = function() {
   goBackBtn.textContent = "Go Back";
   goBackBtn.style.display = "block";
   goBackBtn.addEventListener("click", function() {
+    scoreboard.innerHTML = "";
     clearContents();
     loadQuiz();
   });
@@ -369,7 +404,9 @@ let showHighScores = function() {
   clearScoresBtn.style.display = "block";
   clearScoresBtn.addEventListener("click", function() {
     if (confirm("Are you sure you want to clear the scoreboard? This action cannot be undone.")) {
+      scoreboard.innerHTML = "";
       clearStorage();
+      clearContents();
       showHighScores();
     }
   });
