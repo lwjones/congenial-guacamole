@@ -30,7 +30,7 @@ const Quiz = {
       ]
     },
     {
-      question: "The condition in an if/else statement is enclosed with ________.",
+      question: "The condition in an if/else statement is enclosed with ______.",
       choices: [
         {
           text: "quotes",
@@ -38,15 +38,82 @@ const Quiz = {
         },
         {
           text: "curly brackets",
+          correct: false
+        },
+        {
+          text: "parenthesis",
+          correct: true
+        },
+        {
+          text: "square brackets",
+          correct: false
+        }
+      ]
+    },
+    {
+      question: "Arrays in JavaScript can be used to store ______.",
+      choices: [
+        {
+          text: "numbers and strings",
+          correct: false
+        },
+        {
+          text: "other arrays",
+          correct: false
+        },
+        {
+          text: "booleans",
+          correct: false
+        },
+        {
+          text: "all of the above",
+          correct: true
+        }
+      ],
+    },
+    {
+      question:
+        "String values must be enclosed within ______ when \
+          being assigned to variables.",
+      choices: [
+        {
+          text: "commas",
+          correct: false
+        },
+        {
+          text: "curly brackets",
+          correct: false
+        },
+        {
+          text: "quotes",
           correct: true
         },
         {
           text: "parenthesis",
           correct: false
+        }
+      ],
+    },
+    {
+      question:
+        "A very useful tool used during development and debugging for \
+          printing content to the debugger is:",
+      choices: [
+        {
+          text: "JavaScript",
+          correct: false
         },
         {
-          text: "square brackets",
+          text: "terminal/bash",
           correct: false
+        },
+        {
+          text: "for loops",
+          correct: false
+        },
+        {
+          text: "console.log",
+          correct: true
         }
       ]
     }
@@ -130,7 +197,7 @@ let loadQuiz = function() {
 
 
 let startQuiz = function() {
-  timeLeft = 5; // FIXME: Set default to 40
+  timeLeft = 40;
   timerEl.textContent = timeLeft;
   quizTimer = setInterval(function() {
     timeLeft--;
