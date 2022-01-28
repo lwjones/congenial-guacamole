@@ -4,7 +4,7 @@ const Quiz = {
     description:
       "Try to answer the following code-related questions within the time \
         limit. Keep in mind that incorrect answers will penalize your \
-        score/time by ten seconds!",
+        score/time by ten seconds, and unanswered questions by twelve!",
     cta: "Start Quiz"
   },
   questions: [
@@ -214,6 +214,12 @@ let checkAnswer = function(event) {
 
 
 let endQuiz = function() {
+  // If there is questions remaining, assume they are wrong
+  let questionIdx = document.getElementById("title").getAttribute("data-question-id");
+  if (questionIdx < Quiz.questions.length) {
+    timeLeft -= (Quiz.questions.length - questionIdx) * 12;
+  }
+
   clearContents();
 
   // if time negative set to zero
