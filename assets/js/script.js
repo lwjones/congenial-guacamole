@@ -75,8 +75,6 @@ let clearContents = function() {
   let scoreEl = document.getElementById("scores-list");
   scoreEl.innerHTML = "";
 
-  document.getElementById("scores-action").innerHTML = "";
-
   document.getElementById("cta").innerHTML = "";
 }
 
@@ -115,6 +113,9 @@ let loadQuiz = function() {
 
   let showHighScoresBtn = document.getElementById("view-scores-btn");
   showHighScoresBtn.addEventListener("click", showHighScores);
+
+  document.getElementById("isChoiceCorrect")
+    .setAttribute("style", "visibility:hidden");
 
   let cta = document.getElementById("cta");
   let startBtn = document.createElement("button");
@@ -192,7 +193,7 @@ let checkAnswer = function(event) {
   let questionIdx = document.getElementById("title").getAttribute("data-question-id");
   let isCorrect = Quiz.questions[questionIdx].choices[choiceIdx].correct;
   let isChoiceCorrectEl = document.getElementById("isChoiceCorrect");
-  isChoiceCorrectEl.classList.remove("hidden");
+
 
   if (isCorrect) {
     isChoiceCorrectEl.innerHTML = "<p>Correct!</p>";
@@ -201,6 +202,14 @@ let checkAnswer = function(event) {
     // penalty if wrong: remove 10 points/seconds
     timeLeft -= 10;
   }
+
+  setInterval(function() {
+    isChoiceCorrectEl.setAttribute("style", "visibility:hidden");
+  }, 2000);
+
+  clearInterval();
+  isChoiceCorrectEl.setAttribute("style", "visibility: visible");
+
 }
 
 
