@@ -72,11 +72,16 @@ let clearContents = function() {
   let submitScoreForm = document.getElementById("entry");
   submitScoreForm = "";
 
+  let scoreEl = document.getElementById("scores-list");
+  scoreEl.innerHTML = "";
+
+  document.getElementById("scores-action").innerHTML = "";
+
   document.getElementById("cta").innerHTML = "";
 }
 
 
-let loadStorage = function(flush = false) {
+let loadStorage = function(flush=false) {
   let currentData = localStorage.getItem('quiz-scores');
   if (!currentData || !currentData.length || flush === true) {
     quizStorage = [];
@@ -100,7 +105,7 @@ let loadQuiz = function() {
   clearContents();
 
   let header = document.getElementById("header");
-  header.classList.remove("hidden");
+  header.style.display = "flex";
 
   let title = document.getElementById("title");
   title.textContent = Quiz.frontMatter.title;
@@ -222,10 +227,12 @@ let submitScore = function() {
   submitScoreForm.innerHTML = `
     <form>
     <label for="name">Enter Name:</label>
-    <input type="text" id="user_name" name="name" placeholder="Your Name" required>
+    <input type="text" id="user_name" placeholder="Your Name" name="name">
     <input type="submit" id="submit_score" value="Submit">
     </form>
   `;
+
+  document.getElementById("user_name").required = true;
 
   let submitBtn = document.getElementById("submit_score");
 
@@ -245,7 +252,9 @@ let showHighScores = function() {
   title.textContent = "High Scores";
 
   let submitScoreForm = document.getElementById("entry");
-  submitScoreForm.remove();
+  if (submitScoreForm) {
+    submitScoreForm.remove();
+  }
 
   let header = document.getElementById("header");
   header.style.display = "none";
@@ -257,6 +266,32 @@ let showHighScores = function() {
     scoreEl.textContent = `${i + 1}. ${quizStorage[i].name} - ${quizStorage[i].score}`;
     scores.appendChild(scoreEl);
   }
+
+
+  let scoreboard = document.getElementById("scores-action");
+  let goBackBtn = document.createElement("button");
+  goBackBtn.classList.add("secondary-button");
+  goBackBtn.id = "back-button";
+  goBackBtn.textContent = "Go Back";
+  goBackBtn.style.display = "block";
+  goBackBtn.addEventListener("click", function() {
+    clearContents();
+    loadQuiz();
+  });
+  scoreboard.appendChild(goBackBtn);
+
+  let clearScoresBtn = document.createElement("button");
+  clearScoresBtn.classList.add("secondary-button");
+  clearScoresBtn.id = "clear-button";
+  clearScoresBtn.textContent = "Clear Scores";
+  clearScoresBtn.style.display = "block";
+  clearScoresBtn.addEventListener("click", function() {
+    if (confirm("Are you sure you want to clear the scoreboard? This action cannot be undone.")) {
+      clearStorage();
+      showHighScores();
+    }
+  });
+  scoreboard.appendChild(clearScoresBtn);
 }
 
 
