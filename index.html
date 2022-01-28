@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/styles.css">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <header id="header">
+    <button id="view-scores-btn" class="left">View high scores</button>
+    <div id="timer"><p>Time: <span id="remaining">0</span></p></div>
+  </header>
+
+  <main id="main">
+    <div class="content">
+      <h1 id="title">This is a question:</h1>
+      <div id="details">
+        <p id="description">Something something dark side.</p>
+        <div id="cta" class="center"></div>
+        <div id="choices" class="left"></div>
+        <div id="entry"></div>
+        <div id="scores">
+          <ul id="scores-list" class="left"></ul>
+          <div id="scores-action"></div>
+        </div>
+      </div>
+      <div id="isChoiceCorrect"></div>
+    </div>
+  </main>
+
+  <script src="./assets/js/script.js"></script>
+</body>
+
+</html>
