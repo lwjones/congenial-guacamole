@@ -4,7 +4,7 @@ const Quiz = {
     description:
       "Try to answer the following code-related questions within the time \
         limit. Keep in mind that incorrect answers will penalize your \
-        score/time by ten seconds, and unanswered questions by twelve!",
+        score/time by ten seconds.",
     cta: "Start Quiz"
   },
   questions: [
@@ -132,10 +132,14 @@ let clearContents = function() {
   document.getElementById("title").textContent = "";
   document.getElementById("description").textContent = "";
   document.getElementById("choices").textContent = "";
-  document.getElementById("entry").innerHTML = "";
   document.getElementById("scores-list").innerHTML = "";
   document.getElementById("scores-action").innerHTML = "";
   document.getElementById("cta").innerHTML = "";
+
+  let entryForm = document.getElementById("entry");
+  if (entryForm) {
+    document.getElementById("entry").innerHTML = "";
+  }
 }
 
 
@@ -305,28 +309,42 @@ let checkAnswer = function(event) {
 
 
 /**
+ * Tell user time is out to complete quiz.
+ */
+let noTimeRemains = function() {
+  let title = document.getElementById("title");
+  title.textContent = "Time's up.";
+  let description = document.getElementById("description");
+  description.textContent = "Quiz was not complete in time";
+}
+
+
+/**
  * Show user their score.
  */
 let endQuiz = function() {
   // If there is questions remaining, assume they are wrong
   let questionIdx = document.getElementById("title").getAttribute("data-question-id");
-  if (questionIdx < Quiz.questions.length) {
-    timeLeft -= (Quiz.questions.length - questionIdx) * 12;
-  }
 
   clearContents();
 
-  // if time negative set to zero
-  timerEl.textContent = '0';
+  if (questionIdx < (Quiz.questions.length - 1)) {
+    noTimeRemains();
+    setTimeout(showHighScores, 3000);
+  } else {
+    // if time negative set to zero
+    timerEl.textContent = '0';
 
-  // replace title
-  let title = document.getElementById("title");
-  title.textContent = "All Done!";
+    // replace title
+    let title = document.getElementById("title");
+    title.textContent = "All Done!";
 
-  let description = document.getElementById("description");
-  description.textContent = `Your final score is ${timeLeft}`;
+    let description = document.getElementById("description");
+    description.textContent = `Your final score is ${timeLeft}`;
 
-  submitScore();
+    submitScore();
+  }
+
 }
 
 
